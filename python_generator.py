@@ -1,53 +1,25 @@
-i_list = [
+import re
+
+# A valid credit card from ABCD Bank has the following characteristics:
+
+# ► It must start with a 4, 5 or 6.
+# ► It must contain exactly  16 digits.
+# ► It must only consist of digits (0-9).
+# ► It may have digits in groups of 4, separated by one hyphen "-".
+# ► It must NOT use any other separator like ' ' , '_', etc.
+# ► It must NOT have  4 or more consecutive repeated digits.
+
+total = int(input())
+text = []
+pattern = r'^(?=[456])(?!.*(\d)(-?\1){3})\d{4}(-?\d{4}){3}$'
+
+for _ in range(total):
+    value = input()
+    text.append(value)
     
-    "4123456789123456",
-    "5123-4567-8912-3456",
-    "61234-567-8912-3456",
-    "4123356789123456",
-    "5133-3367-8912-3456",
-    "5123 - 3567 - 8912 - 3456"
-]
-
-for credit_number in i_list:
-    # Remover espacios y guiones para la validacion
-    clean_number = credit_number.replace(' ', '').replace('-', '')
-
-    # Contador de digitos
-    contador_numeros = 0
-    contador_repeticiones = 1  
-    caracter_anterior = clean_number[0] 
-
-    for caracter in clean_number:
-        if caracter.isdigit():
-            contador_numeros += 1        
-
-    if contador_numeros != 16:
-        print('Invalid')
-    elif clean_number[0] not in ('4', '5', '6'):
-        print("Invalid")
-    elif not all(caracter.isdigit() for caracter in clean_number):
-        print("Invalid")
+for num in text:
+    result = re.match(pattern, num)
+    if result:
+        print("Valid")
     else:
-        # Validar el formato con guiones o espacios si existen
-        if '-' in credit_number:
-            if not (credit_number[4] == '-' and credit_number[9] == '-' and credit_number[14] == '-'):
-                print("Invalid")
-                continue
-        elif ' ' in credit_number:
-            if not (credit_number[4] == ' ' and credit_number[9] == ' ' and credit_number[14] == ' '):
-                print("Invalid")
-                continue
-
-        # Validar repeticiones consecutivas
-        for caracter in clean_number[1:]:
-            if caracter == caracter_anterior:
-                contador_repeticiones += 1
-                if contador_repeticiones >= 4:
-                    print("Invalid")
-                    break  
-            else:
-                contador_repeticiones = 1  
-            caracter_anterior = caracter
-        else:
-            print("Valid")
-
+        print("Invalid")   
